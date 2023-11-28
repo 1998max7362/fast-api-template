@@ -1,5 +1,5 @@
 services:
-  fastapi:
+  fastapi-template:
     build: ./src
     ports:
       - 8000:8000
