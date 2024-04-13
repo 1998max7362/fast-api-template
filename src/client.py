@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 import json
 from random import *
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
+import requests
 
 app = FastAPI()
 
@@ -54,34 +55,18 @@ class ResponseModel(BaseModel):
 class ErrorModel(BaseModel):
     error: str
 
+def _proxy(*args, **kwargs):
+    t_resp = requests.request(
+        method="GET",
+        url='http://fastapi-server:20001/',
+        allow_redirects=False)
 
-@app.get("/examp", response_model=ResponseModel)
-async def answerDevices():
-    return fakeResponse
+    response = Response(content=t_resp.content, status_code=t_resp.status_code)
+    return response
 
-
-@app.post("/examp", responses={201: {"model": ResponseModel}, 400: {"model": ErrorModel}})
-async def postServers(req: RequestModel):
-    return {"res": "ok", "req": req}
-
-
-@app.put("/examp", responses={200: {"model": ResponseModel}, 400: {"model": ErrorModel}})
-async def postServers(req: RequestModel):
-    return {"res": "ok", "req": req}
+@app.get("/test-proxy")
+async def proxy():
+    return _proxy()
 
 
-@app.patch("/examp", responses={200: {"model": ResponseModel}, 400: {"model": ErrorModel}})
-async def postServers(req: RequestModel):
-    return {"res": "ok", "req": req}
 
-
-@app.delete("/examp", responses={200: {"model": ResponseModel}, 400: {"model": ErrorModel}})
-async def postServers():
-    return {"res": "ok"}
-
-
-@app.get("/")
-async def homepage():
-    print('получил запрос')
-    data = json.dumps({'hello': 'world'})
-    return data
