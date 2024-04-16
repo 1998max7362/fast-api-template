@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import json
 from random import *
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -84,4 +84,29 @@ async def postServers():
 async def homepage():
     print('получил запрос')
     data = json.dumps({'hello': 'world'})
+    return data
+
+
+# --------------------
+class Object1(BaseModel):
+    prop1: str
+
+class Object2(BaseModel):
+    prop2: int
+
+class Object3(BaseModel):
+    prop3: float
+
+# Define a union of the different object types
+Object = Union[Object1, Object2, Object3]
+
+
+data =  [
+        {"prop1": "value1"},
+        {"prop2": 123},
+        {"prop3": 3.14}
+    ]
+
+@app.get("/dif_objects")
+async def dif_objects()->List[Object]:
     return data
