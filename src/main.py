@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 import json
 from random import *
 from datetime import datetime
@@ -110,3 +110,22 @@ data =  [
 @app.get("/dif_objects")
 async def dif_objects()->List[Object]:
     return data
+
+#  --------------------------------------------
+class QueryModel(BaseModel):
+   query_param1: str 
+
+
+@app.get("/query_params")
+async def dif_objects(model: QueryModel = Depends())->ResponseModel:
+    return data
+
+#  --------------------------------------------
+
+@app.get("/liveness")
+async def liveness()->None:
+    return 
+
+@app.get("/readness", responses={200: {}, 503: {}})
+async def readness()->None:
+    return 
