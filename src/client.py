@@ -70,3 +70,15 @@ async def proxy():
 
 
 
+#  ----------------------------------------------
+@app.get("/proxy_to_another_compose")
+async def proxy_test():
+    t_resp = requests.request(
+        method="GET",
+        # url='http://localhost:20003/',
+        # url='http://127.0.0.1:20003/',
+        url='http://host.docker.internal:20003/',
+        allow_redirects=False)
+
+    response = Response(content=t_resp.content, status_code=t_resp.status_code)
+    return response

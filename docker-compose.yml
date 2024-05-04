@@ -14,3 +14,6 @@ services:
       - 8001:20001
     volumes:
       - ./:/src
+    extra_hosts:
+      # - "host.docker.internal:20003"
+      - "host.docker.internal:host-gateway"
